@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
@@ -85,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private WebViewClient mWebViewClient = new WebViewClient(){
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 

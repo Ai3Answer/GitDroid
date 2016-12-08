@@ -1,5 +1,6 @@
 package com.feicuiedu.gitdroid.network;
 
+import com.feicuiedu.gitdroid.login.TokenInterceptor;
 import com.feicuiedu.gitdroid.login.model.AccessToken;
 
 import okhttp3.OkHttpClient;
@@ -35,6 +36,7 @@ public class GithubClient implements GithubApi{
         // 初始化OkhttpClient
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .addInterceptor(new TokenInterceptor())
                 .build();
 
         // 初始化Retrofit

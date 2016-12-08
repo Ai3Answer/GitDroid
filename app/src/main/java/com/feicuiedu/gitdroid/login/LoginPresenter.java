@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.feicuiedu.gitdroid.commons.LogUtils;
 import com.feicuiedu.gitdroid.login.model.AccessToken;
+import com.feicuiedu.gitdroid.login.model.UserRepo;
 import com.feicuiedu.gitdroid.network.GithubApi;
 import com.feicuiedu.gitdroid.network.GithubClient;
 
@@ -44,6 +45,10 @@ public class LoginPresenter {
                 // 取出响应信息，得到Token值
                 AccessToken accessToken = response.body();
                 String token = accessToken.getAccessToken();
+
+                // 存储Token值
+                UserRepo.setAccessToken(token);
+
                 LogUtils.e("Token值："+token);
             }
             LogUtils.e("onResponse");
@@ -51,7 +56,7 @@ public class LoginPresenter {
 
         @Override
         public void onFailure(Call<AccessToken> call, Throwable t) {
-            LogUtils.e("onFailure");
+            LogUtils.e("onFailure"+t.getMessage());
 
         }
     };
