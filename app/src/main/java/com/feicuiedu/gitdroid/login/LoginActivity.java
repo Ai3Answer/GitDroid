@@ -11,7 +11,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.feicuiedu.gitdroid.MainActivity;
 import com.feicuiedu.gitdroid.R;
+import com.feicuiedu.gitdroid.commons.ActivityUtils;
 import com.feicuiedu.gitdroid.network.GithubApi;
 import com.feicuiedu.gitdroid.network.GithubClient;
 
@@ -19,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.droidsonroids.gif.GifImageView;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginView{
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -27,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     WebView mWebView;
     @BindView(R.id.gifImageView)
     GifImageView mGifImageView;
+    private LoginPresenter mLoginPresenter;
+    private ActivityUtils mActivityUtils;
 
     /**
      * 1. 申请开发者应用，得到两个应用信息：CLIENT_ID,CLIENT_SECRET
@@ -40,11 +44,13 @@ public class LoginActivity extends AppCompatActivity {
      * 3. code换取Token：进行网络请求
      * 4. 根据Token获取用户信息
      *
+     * 利用MVP模式来进行
      * 1. code 获取Token
      *      1. 构建请求：POST 表单提交(键值对)
      *      2. 执行请求：在Client类里面实现了方法
      *                  执行
-     *                  利用MVP模式来进行
+     * 2. token获取用户信息
+     *
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,10 @@ public class LoginActivity extends AppCompatActivity {
     public void onContentChanged() {
         super.onContentChanged();
         ButterKnife.bind(this);
+
+        mActivityUtils = new ActivityUtils(this);
+
+        mLoginPresenter = new LoginPresenter(this);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -99,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                 // 得到了我们的code值,获取Token
                 Log.e("TAG","临时的授权码："+code);
                 // 根据code去进行请求得到Token
-                new LoginPresenter().login(code);
+                mLoginPresenter.login(code);
                 return true;
             }
             return super.shouldOverrideUrlLoading(view, url);
@@ -116,4 +126,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void showProgress() {
+        mGifImageView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        mActivityUtils.showToast(msg);
+    }
+
+    @Override
+    public void resetWeb() {
+        initWebView();
+    }
+
+    @Override
+    public void navigationToMain() {
+        mActivityUtils.startActivity(MainActivity.class);
+        finish();
+    }
 }

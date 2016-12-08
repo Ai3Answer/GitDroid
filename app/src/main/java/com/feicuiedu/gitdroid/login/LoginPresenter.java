@@ -20,6 +20,12 @@ import retrofit2.Response;
 // 登录的业务类
 public class LoginPresenter {
 
+    private LoginView mLoginView;
+
+    public LoginPresenter(LoginView loginView) {
+        mLoginView = loginView;
+    }
+
     private Call<AccessToken> mTokenCall;
     private Call<User> mUserCall;
 
@@ -27,6 +33,9 @@ public class LoginPresenter {
         /**
          * 1. 获取Token
          */
+
+        mLoginView.showProgress();
+
         if (mTokenCall != null) {
             mTokenCall.cancel();
         }
@@ -51,6 +60,8 @@ public class LoginPresenter {
                 // 存储Token值
                 UserRepo.setAccessToken(token);
 
+                mLoginView.showProgress();
+
                 // 根据token获取用户信息
                 mUserCall = GithubClient.getInstance().getUser();
                 mUserCall.enqueue(mUserCallback);
@@ -60,7 +71,9 @@ public class LoginPresenter {
 
         @Override
         public void onFailure(Call<AccessToken> call, Throwable t) {
-            LogUtils.e("onFailure"+t.getMessage());
+            mLoginView.showMessage("请求失败"+t.getMessage());
+            mLoginView.resetWeb();
+            mLoginView.showProgress();
 
         }
     };
@@ -68,17 +81,22 @@ public class LoginPresenter {
     private Callback<User> mUserCallback = new Callback<User>() {
         @Override
         public void onResponse(Call<User> call, Response<User> response) {
+
             if (response.isSuccessful()){
                 // 信息存储一下
                 User user = response.body();
                 UserRepo.setUser(user);
-                LogUtils.e("请求的响应信息"+UserRepo.getUser().toString());
+
+                mLoginView.showMessage("登录成功");
+                mLoginView.navigationToMain();
             }
         }
 
         @Override
         public void onFailure(Call<User> call, Throwable t) {
-
+            mLoginView.showMessage("请求失败"+t.getMessage());
+            mLoginView.resetWeb();
+            mLoginView.showProgress();
         }
     };
 }
