@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.feicuiedu.gitdroid.commons.LogUtils;
 import com.feicuiedu.gitdroid.login.model.AccessToken;
+import com.feicuiedu.gitdroid.login.model.User;
 import com.feicuiedu.gitdroid.login.model.UserRepo;
 import com.feicuiedu.gitdroid.network.GithubApi;
 import com.feicuiedu.gitdroid.network.GithubClient;
@@ -20,6 +21,7 @@ import retrofit2.Response;
 public class LoginPresenter {
 
     private Call<AccessToken> mTokenCall;
+    private Call<User> mUserCall;
 
     public void login(String code) {
         /**
@@ -49,14 +51,33 @@ public class LoginPresenter {
                 // 存储Token值
                 UserRepo.setAccessToken(token);
 
-                LogUtils.e("Token值："+token);
+                // 根据token获取用户信息
+                mUserCall = GithubClient.getInstance().getUser();
+                mUserCall.enqueue(mUserCallback);
+
             }
-            LogUtils.e("onResponse");
         }
 
         @Override
         public void onFailure(Call<AccessToken> call, Throwable t) {
             LogUtils.e("onFailure"+t.getMessage());
+
+        }
+    };
+
+    private Callback<User> mUserCallback = new Callback<User>() {
+        @Override
+        public void onResponse(Call<User> call, Response<User> response) {
+            if (response.isSuccessful()){
+                // 信息存储一下
+                User user = response.body();
+                UserRepo.setUser(user);
+                LogUtils.e("请求的响应信息"+UserRepo.getUser().toString());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<User> call, Throwable t) {
 
         }
     };

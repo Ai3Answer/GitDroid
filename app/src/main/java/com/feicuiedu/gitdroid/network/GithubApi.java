@@ -1,11 +1,13 @@
 package com.feicuiedu.gitdroid.network;
 
 import com.feicuiedu.gitdroid.login.model.AccessToken;
+import com.feicuiedu.gitdroid.login.model.User;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
@@ -40,5 +42,12 @@ public interface GithubApi {
             @Field("client_id")String clientId,
             @Field("client_secret")String clientSecret,
             @Field("code")String code);
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    @GET("/user")
+    Call<User> getUser();
 
 }
