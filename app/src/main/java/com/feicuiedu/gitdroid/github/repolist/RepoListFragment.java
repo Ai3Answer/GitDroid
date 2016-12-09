@@ -1,4 +1,4 @@
-package com.feicuiedu.gitdroid.github;
+package com.feicuiedu.gitdroid.github.repolist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

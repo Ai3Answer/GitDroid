@@ -19,6 +19,7 @@ import com.feicuiedu.gitdroid.commons.ActivityUtils;
 import com.feicuiedu.gitdroid.github.HotRepoFragment;
 import com.feicuiedu.gitdroid.login.LoginActivity;
 import com.feicuiedu.gitdroid.login.model.UserRepo;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,7 +105,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        // TODO: 2016/12/1 展示登录用户的信息
+        // 判断用户信息是不是为空
+        if (UserRepo.isEmpty()){
+            mBtnLogin.setText(R.string.login_github);
+            return;
+        }
+        // 改成切换账号
+        mBtnLogin.setText(R.string.switch_account);
+        // 设置toolbar的标题
+        getSupportActionBar().setTitle(UserRepo.getUser().getName());
+        // 设置头像信息
+        /**
+         * Picasso进行图片的展示
+         * 1. 添加依赖：compile 'com.squareup.picasso:picasso:2.5.2'
+         * 2. 使用
+         */
+        Picasso.with(this)
+                .load(UserRepo.getUser().getAvatar())// 加载图片
+                .into(mIvIcon);// 作用到谁身上
 
     }
 
