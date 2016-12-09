@@ -5,12 +5,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.feicuiedu.gitdroid.github.repolist.RepoListFragment;
+import com.feicuiedu.gitdroid.github.repolist.model.Language;
+
+import java.util.List;
 
 /**
  * Created by gqq on 2016/12/2.
  */
 
 public class HotRepoAdapter extends FragmentPagerAdapter{
+
+    private List<Language> data;
 
     public HotRepoAdapter(FragmentManager fm) {
         super(fm);

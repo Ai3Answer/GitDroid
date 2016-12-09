@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // 改成切换账号
         mBtnLogin.setText(R.string.switch_account);
         // 设置toolbar的标题
-        getSupportActionBar().setTitle(UserRepo.getUser().getName());
+        getSupportActionBar().setTitle(UserRepo.getUser().getLogin());
         // 设置头像信息
         /**
          * Picasso进行图片的展示
