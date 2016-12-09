@@ -1,5 +1,6 @@
 package com.feicuiedu.gitdroid.github;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,23 +18,24 @@ public class HotRepoAdapter extends FragmentPagerAdapter{
 
     private List<Language> data;
 
-    public HotRepoAdapter(FragmentManager fm) {
+    public HotRepoAdapter(FragmentManager fm, Context context) {
         super(fm);
+        data = Language.getLanguage(context);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return new RepoListFragment();
+        return RepoListFragment.getInstance(data.get(position));
     }
 
     @Override
     public int getCount() {
-        return 10;
+        return data==null?0:data.size();
     }
 
     // 拿到ViewPager的标题
     @Override
     public CharSequence getPageTitle(int position) {
-        return "java"+position;
+        return data.get(position).getName();
     }
 }

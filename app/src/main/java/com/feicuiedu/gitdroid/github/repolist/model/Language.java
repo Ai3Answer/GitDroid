@@ -9,13 +9,14 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by gqq on 2016/12/9.
  */
 
-public class Language {
+public class Language implements Serializable{
 
     private static List<Language> mLanguages;
 
