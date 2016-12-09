@@ -1,7 +1,10 @@
 package com.feicuiedu.gitdroid.network;
 
+import com.feicuiedu.gitdroid.github.repolist.model.Repo;
 import com.feicuiedu.gitdroid.login.model.AccessToken;
 import com.feicuiedu.gitdroid.login.model.User;
+
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -10,6 +13,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by gqq on 2016/12/8.
@@ -49,5 +53,8 @@ public interface GithubApi {
      */
     @GET("/user")
     Call<User> getUser();
+
+    @GET("/search/repositories")
+    Call<List<Repo>> searchRepos(@Query("q")String q, @Query("page")int page);
 
 }
