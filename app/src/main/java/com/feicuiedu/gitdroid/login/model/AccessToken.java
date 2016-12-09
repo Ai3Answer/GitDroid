@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by gqq on 2016/12/8.
  */
 
+// 请求token得到的响应数据模型
 public class AccessToken {
 
     /**

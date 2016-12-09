@@ -48,7 +48,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     // 拦截器
     compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
-
     // retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
 }

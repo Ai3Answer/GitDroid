@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by gqq on 2016/12/8.
  */
 
+// 用户信息的实体类
 public class User {
 
     /**

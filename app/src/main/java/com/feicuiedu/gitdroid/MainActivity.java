@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.feicuiedu.gitdroid.commons.ActivityUtils;
 import com.feicuiedu.gitdroid.github.HotRepoFragment;
 import com.feicuiedu.gitdroid.login.LoginActivity;
+import com.feicuiedu.gitdroid.login.model.UserRepo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         // TODO: 2016/12/1 展示登录用户的信息
+
     }
 
     @Override

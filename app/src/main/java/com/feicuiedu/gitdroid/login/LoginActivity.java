@@ -63,10 +63,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
         super.onContentChanged();
         ButterKnife.bind(this);
 
+        // Activity的工具类
         mActivityUtils = new ActivityUtils(this);
 
+        // 初始化业务类
         mLoginPresenter = new LoginPresenter(this);
 
+        // ActionBar 的设置和返回键
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -103,12 +106,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
             //页面刷新
             Uri uri = Uri.parse(url);
 
-            // 通过判断
+            // 通过判断重定向的网址是不是我们申请时授权Callback的url，判断前缀就可以了
             if (GithubApi.CALL_BACK.equals(uri.getScheme())){
-                String code = uri.getQueryParameter("code");
+
                 // 得到了我们的code值,获取Token
-                Log.e("TAG","临时的授权码："+code);
-                // 根据code去进行请求得到Token
+                String code = uri.getQueryParameter("code");
+
+                // 根据code去进行请求得到Token，在业务类里面进行
                 mLoginPresenter.login(code);
                 return true;
             }
@@ -127,6 +131,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
         }
     };
 
+    //---------------------------视图的具体实现-------------------------------
     @Override
     public void showProgress() {
         mGifImageView.setVisibility(View.VISIBLE);
