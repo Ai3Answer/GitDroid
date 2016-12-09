@@ -1,6 +1,7 @@
 package com.feicuiedu.gitdroid.network;
 
 import com.feicuiedu.gitdroid.github.repolist.model.Repo;
+import com.feicuiedu.gitdroid.github.repolist.model.RepoResult;
 import com.feicuiedu.gitdroid.login.model.AccessToken;
 import com.feicuiedu.gitdroid.login.model.User;
 
@@ -54,7 +55,15 @@ public interface GithubApi {
     @GET("/user")
     Call<User> getUser();
 
+    /**
+     * 获取仓库列表
+     * @param q 语言
+     * @param page 页数
+     * @return
+     */
     @GET("/search/repositories")
-    Call<List<Repo>> searchRepos(@Query("q")String q, @Query("page")int page);
+    Call<RepoResult> searchRepos(
+            @Query("q")String q,
+            @Query("page")int page);
 
 }

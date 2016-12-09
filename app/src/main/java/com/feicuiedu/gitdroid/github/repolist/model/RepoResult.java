@@ -39,7 +39,7 @@ public class RepoResult {
         this.incompleteResults = incompleteResults;
     }
 
-    public List<?> getItems() {
+    public List<Repo> getItems() {
         return items;
     }
 

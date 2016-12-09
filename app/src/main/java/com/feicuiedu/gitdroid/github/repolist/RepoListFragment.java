@@ -11,16 +11,23 @@ import android.widget.TextView;
 
 import com.feicuiedu.gitdroid.R;
 import com.feicuiedu.gitdroid.github.repolist.model.Language;
+import com.feicuiedu.gitdroid.github.repolist.model.Repo;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler2;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.header.StoreHouseHeader;
+import in.srain.cube.views.ptr.util.PtrLocalDisplay;
 
 /**
  * Created by gqq on 2016/12/2.
  */
 
-public class RepoListFragment extends Fragment {
+public class RepoListFragment extends Fragment implements RepoListView{
 
     private static final String KEY_LANGUAGE = "key_language";
 
@@ -32,6 +39,8 @@ public class RepoListFragment extends Fragment {
     TextView mEmptyView;
     @BindView(R.id.errorView)
     TextView mErrorView;
+    private RepoListAdapter mAdapter;
+    private RepoListPresenter mRepoListPresenter;
 
     /**
      * 仓库列表页面：不同语言的仓库列表数据
@@ -42,6 +51,9 @@ public class RepoListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_repo_list, container, false);
+
+        mRepoListPresenter = new RepoListPresenter(getLanguage(),this);
+
         ButterKnife.bind(this, view);
         return view;
     }
@@ -69,10 +81,74 @@ public class RepoListFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RepoListAdapter adapter = new RepoListAdapter();
-        mLvRepos.setAdapter(adapter);
+        mAdapter = new RepoListAdapter();
+        mLvRepos.setAdapter(mAdapter);
 
-        //// TODO: 2016/12/9 缺数据
+        //判断有没有数据，没有数据的话，自动刷新
+        if (mAdapter.getCount()==0){
+            mPtrClassicFrameLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // 自动刷新
+                    mPtrClassicFrameLayout.autoRefresh();
+                }
+            }, 200);
+        }
 
+        initRefresh();
+
+    }
+
+    // 初始化刷新和加载
+    private void initRefresh() {
+
+        // 刷新间隔比较短，不触发刷新
+        mPtrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
+
+        // 关闭视图的时间
+        mPtrClassicFrameLayout.setDurationToClose(1500);
+
+        // 设置头布局
+        StoreHouseHeader header = new StoreHouseHeader(getContext());
+        header.initWithString("I LIKE ANDROID");
+        mPtrClassicFrameLayout.setHeaderView(header);
+        mPtrClassicFrameLayout.addPtrUIHandler(header);
+
+        // 设置背景
+        mPtrClassicFrameLayout.setBackgroundResource(R.color.colorRefresh);
+
+
+        // 设置监听：我们使用的是既有刷新又有加载的
+        mPtrClassicFrameLayout.setPtrHandler(new PtrDefaultHandler2() {
+
+            // 上拉加载开始的方法
+            @Override
+            public void onLoadMoreBegin(PtrFrameLayout frame) {
+                // 去进行加载更多，通过业务类来进行
+
+                mRepoListPresenter.loadMore();
+            }
+
+            // 下拉刷新开始的方法
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                // 去刷新数据，通过业务类来进行
+                mRepoListPresenter.refreshdata();
+            }
+        });
+
+    }
+
+    @Override
+    public void addRefreshData(List<Repo> repos) {
+        mAdapter.clear();
+        mAdapter.addAll(repos);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void addLoadMore(List<Repo> repos) {
+        mAdapter.addAll(repos);
+        mAdapter.notifyDataSetChanged();
     }
 }

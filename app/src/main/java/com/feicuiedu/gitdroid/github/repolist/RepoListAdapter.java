@@ -12,6 +12,7 @@ import com.feicuiedu.gitdroid.github.repolist.model.Repo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -23,6 +24,16 @@ import butterknife.ButterKnife;
 public class RepoListAdapter extends BaseAdapter {
 
     private List<Repo> data;
+
+    public void addAll(Collection<Repo> repos) {
+        data.addAll(repos);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        data.clear();
+        notifyDataSetChanged();
+    }
 
     public RepoListAdapter() {
         data = new ArrayList<>();
@@ -45,17 +56,18 @@ public class RepoListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder=null;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_item_repo, parent, false);
-            convertView.setTag(new ViewHolder(convertView));
+            viewHolder=new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
         }
-        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+        viewHolder = (ViewHolder) convertView.getTag();
         Repo repo = data.get(position);
         viewHolder.mTvRepoInfo.setText(repo.getDescription());
         viewHolder.mTvRepoName.setText(repo.getFullName());
-        viewHolder.mTvRepoStars.setText(repo.getStarCount());
+        viewHolder.mTvRepoStars.setText("start："+repo.getStarCount()+"");
         Picasso.with(parent.getContext()).load(repo.getOwner().getAvatar()).into(viewHolder.mIvIcon);
-
         return convertView;
     }
 
