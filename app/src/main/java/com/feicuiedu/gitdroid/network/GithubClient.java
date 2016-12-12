@@ -70,5 +70,4 @@ public class GithubClient implements GithubApi{
     public Call<RepoResult> searchRepos(@Query("q") String q, @Query("page") int page) {
         return mGithubApi.searchRepos(q, page);
     }
-
 }

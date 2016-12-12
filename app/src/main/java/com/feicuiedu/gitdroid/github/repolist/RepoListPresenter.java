@@ -12,6 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.R.attr.id;
+import static android.R.attr.reparentWithOverlay;
 
 /**
  * Created by gqq on 2016/12/9.
@@ -20,11 +21,12 @@ import static android.R.attr.id;
 // 仓库列表的业务类
 public class RepoListPresenter {
 
+    // TODO: 2016/12/09 视图待完善
+
     private RepoListView mRepoListView;
 
     private Language mLanguage;
     private int mNextPage = 1;
-
 
     public RepoListPresenter(Language language,RepoListView repoListView) {
         mLanguage = language;
@@ -40,6 +42,7 @@ public class RepoListPresenter {
 
     // 加载更多的方法
     public void loadMore(){
+
         Call<RepoResult> repoResultCall = GithubClient.getInstance().searchRepos("language:" + mLanguage.getPath(), mNextPage);
         repoResultCall.enqueue(loadMoreCallback);
     }
@@ -48,14 +51,20 @@ public class RepoListPresenter {
 
         @Override
         public void onResponse(Call<RepoResult> call, Response<RepoResult> response) {
+
+            // 隐藏加载的视图
+            mRepoListView.stopMoreData();
+
             if (response.isSuccessful()){
                 RepoResult repoResult = response.body();
                 if (repoResult==null){
                     // 显示加载错误
+                    mRepoListView.showMessage("加载出现错误了");
                     return;
                 }
                 if (repoResult.getTotalCount()<=0){
                     // 显示没有更多数据了
+                    mRepoListView.showMessage("没有更多的数据了");
                     return;
                 }
                 List<Repo> repoList = repoResult.getItems();
@@ -70,7 +79,9 @@ public class RepoListPresenter {
         @Override
         public void onFailure(Call<RepoResult> call, Throwable t) {
             // 加载的视图停止
+            mRepoListView.stopMoreData();
             // 弹个吐司
+            mRepoListView.showMessage("加载失败了"+t.getMessage());
         }
     };
 
@@ -78,15 +89,20 @@ public class RepoListPresenter {
 
          @Override
          public void onResponse(Call<RepoResult> call, Response<RepoResult> response) {
+
+             // 拿到数据之后，停止刷新
+             mRepoListView.stopMoreData();
+
              if (response.isSuccessful()){
                  RepoResult body = response.body();
                  if (body==null){
                      // 显示一个空视图
+                     mRepoListView.showEmptyView();
                      return;
                  }
                  if (body.getTotalCount()<=0){
                      // 显示一个空视图
-                     // 重新刷新数据。。。。
+                     mRepoListView.showEmptyView();
                      return;
                  }
                  // 获取到了数据
@@ -99,12 +115,15 @@ public class RepoListPresenter {
                  }
              }
              // 显示一个错误的视图
+             mRepoListView.showErrorView();
          }
 
          @Override
          public void onFailure(Call<RepoResult> call, Throwable t) {
             // 停止刷新
+             mRepoListView.stopMoreData();
              // 弹吐司
+             mRepoListView.showMessage("请求失败了"+t.getMessage());
          }
      };
 }

@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.feicuiedu.gitdroid.R;
+import com.feicuiedu.gitdroid.commons.ActivityUtils;
 import com.feicuiedu.gitdroid.github.repolist.model.Language;
 import com.feicuiedu.gitdroid.github.repolist.model.Repo;
 
@@ -42,6 +44,8 @@ public class RepoListFragment extends Fragment implements RepoListView{
     private RepoListAdapter mAdapter;
     private RepoListPresenter mRepoListPresenter;
 
+    private ActivityUtils mActivityUtils;
+
     /**
      * 仓库列表页面：不同语言的仓库列表数据
      * 在这个页面里面展示的是不同语言的仓库列表：根据不同的语言去请求不同的数据
@@ -53,6 +57,7 @@ public class RepoListFragment extends Fragment implements RepoListView{
         View view = inflater.inflate(R.layout.fragment_repo_list, container, false);
 
         mRepoListPresenter = new RepoListPresenter(getLanguage(),this);
+        mActivityUtils = new ActivityUtils(this);
 
         ButterKnife.bind(this, view);
         return view;
@@ -111,6 +116,7 @@ public class RepoListFragment extends Fragment implements RepoListView{
         // 设置头布局
         StoreHouseHeader header = new StoreHouseHeader(getContext());
         header.initWithString("I LIKE ANDROID");
+        header.setPadding(0,30,0,30);
         mPtrClassicFrameLayout.setHeaderView(header);
         mPtrClassicFrameLayout.addPtrUIHandler(header);
 
@@ -125,7 +131,6 @@ public class RepoListFragment extends Fragment implements RepoListView{
             @Override
             public void onLoadMoreBegin(PtrFrameLayout frame) {
                 // 去进行加载更多，通过业务类来进行
-
                 mRepoListPresenter.loadMore();
             }
 
@@ -136,7 +141,6 @@ public class RepoListFragment extends Fragment implements RepoListView{
                 mRepoListPresenter.refreshdata();
             }
         });
-
     }
 
     @Override
@@ -150,5 +154,29 @@ public class RepoListFragment extends Fragment implements RepoListView{
     public void addLoadMore(List<Repo> repos) {
         mAdapter.addAll(repos);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void stopMoreData() {
+        mPtrClassicFrameLayout.refreshComplete();// 刷新停止（加载停止）
+    }
+
+    @Override
+    public void showEmptyView() {
+        mPtrClassicFrameLayout.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
+        mErrorView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showErrorView() {
+        mPtrClassicFrameLayout.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        mActivityUtils.showToast(msg);
     }
 }
