@@ -1,5 +1,8 @@
 package com.feicuiedu.gitdroid.login;
 
+import android.util.Log;
+
+import com.feicuiedu.gitdroid.commons.LogUtils;
 import com.feicuiedu.gitdroid.login.model.UserRepo;
 
 import java.io.IOException;
@@ -42,6 +45,7 @@ public class TokenInterceptor implements Interceptor {
 
         // 附：处理一下其他情况：API文档里面有介绍
         if (response.code()==401|| response.code()==403){
+            LogUtils.e(response.body().string());
             throw new IOException("未经授权的！");
         }else {
             throw new IOException("响应码："+response.code());

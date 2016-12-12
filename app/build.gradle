@@ -56,4 +56,8 @@ dependencies {
 
     // 下拉刷新和上拉加载
     compile 'in.srain.cube:ptr-load-more:1.0.2'
+
+    // 数据库ORMLite添加依赖
+    compile 'com.j256.ormlite:ormlite-core:5.0' // 这个包提供了JDBC和Android的核心功能包
+    compile 'com.j256.ormlite:ormlite-android:5.0'// 这个包提供了Android的特定功能
 }

@@ -41,8 +41,8 @@ public class GithubClient implements GithubApi{
 
         // 初始化OkhttpClient
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
                 .addInterceptor(new TokenInterceptor())
+                .addInterceptor(interceptor)
                 .build();
 
         // 初始化Retrofit

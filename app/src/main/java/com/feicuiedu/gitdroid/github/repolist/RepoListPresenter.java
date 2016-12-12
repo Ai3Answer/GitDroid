@@ -11,17 +11,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.R.attr.id;
-import static android.R.attr.reparentWithOverlay;
-
 /**
  * Created by gqq on 2016/12/9.
  */
 
 // 仓库列表的业务类
 public class RepoListPresenter {
-
-    // TODO: 2016/12/09 视图待完善
 
     private RepoListView mRepoListView;
 
