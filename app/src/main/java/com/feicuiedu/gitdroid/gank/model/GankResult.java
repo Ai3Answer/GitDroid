@@ -8,6 +8,16 @@ import java.util.List;
  * Created by 123 on 2016/9/1.
  */
 public class GankResult {
+    /*
+    "category": [
+        "Android",
+        "\u4f11\u606f\u89c6\u9891",
+        "\u798f\u5229",
+        "iOS"
+        ],
+    "error": false,
+    "results": {
+     */
 
     private List<String> category;
 

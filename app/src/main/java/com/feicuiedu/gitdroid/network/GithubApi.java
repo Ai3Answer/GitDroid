@@ -1,5 +1,6 @@
 package com.feicuiedu.gitdroid.network;
 
+import com.feicuiedu.gitdroid.github.hotuser.HotUserResult;
 import com.feicuiedu.gitdroid.github.repolist.model.Repo;
 import com.feicuiedu.gitdroid.github.repolist.model.RepoResult;
 import com.feicuiedu.gitdroid.login.model.AccessToken;
@@ -14,6 +15,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -66,4 +68,7 @@ public interface GithubApi {
             @Query("q")String q,
             @Query("page")int page);
 
+    // https://api.github.com/search/users?q=followers:>1000
+    @GET("/search/users")
+    Call<HotUserResult> serachUser(@Query("q")String query, @Query("page")int pageId);
 }

@@ -44,6 +44,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     // retrofit的转换器
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    // ImageLoader
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     // gson
     compile 'com.google.code.gson:gson:2.8.0'
     // 拦截器
