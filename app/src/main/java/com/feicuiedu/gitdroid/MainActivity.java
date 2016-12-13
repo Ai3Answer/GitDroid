@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.feicuiedu.gitdroid.commons.ActivityUtils;
+import com.feicuiedu.gitdroid.gank.GankFragment;
 import com.feicuiedu.gitdroid.github.HotRepoFragment;
 import com.feicuiedu.gitdroid.login.LoginActivity;
 import com.feicuiedu.gitdroid.login.model.UserRepo;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //切换的Fragment
     private HotRepoFragment mHotRepoFragment;
+    private GankFragment mGankFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +133,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (item.isChecked()){
             item.setChecked(false);
         }
-        // TODO: 2016/12/1 切换视图
+
+        // TODO: 2016/12/1 我的收藏页面切换视图
+
         switch (item.getItemId()){
 
             // 最热门
@@ -150,6 +154,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             // 每日干货
             case R.id.tips_daily:
+                if (mGankFragment == null) {
+                    mGankFragment = new GankFragment();
+                }
+                if(!mGankFragment.isAdded()){
+                    replaceFragment(mGankFragment);
+                }
                 break;
         }
 

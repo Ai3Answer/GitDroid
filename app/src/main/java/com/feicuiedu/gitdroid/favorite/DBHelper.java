@@ -9,6 +9,12 @@ import com.j256.ormlite.support.ConnectionSource;
 
 /**
  * Created by gqq on 2016/12/12.
+ *
+ * 袁超
+ *
+ *
+ *
+ *
  */
 
 // 数据库的帮助类：对于数据库和表的创建和更新
