@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.feicuiedu.gitdroid.commons.ActivityUtils;
 import com.feicuiedu.gitdroid.gank.GankFragment;
 import com.feicuiedu.gitdroid.github.HotRepoFragment;
+import com.feicuiedu.gitdroid.github.hotuser.HotUserFragment;
 import com.feicuiedu.gitdroid.login.LoginActivity;
 import com.feicuiedu.gitdroid.login.model.UserRepo;
 import com.squareup.picasso.Picasso;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //切换的Fragment
     private HotRepoFragment mHotRepoFragment;
     private GankFragment mGankFragment;
+    private HotUserFragment hotUserFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +148,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             // 开发者
             case R.id.github_hot_coder:
-
+                if (hotUserFragment == null) hotUserFragment = new HotUserFragment();
+                if (!hotUserFragment.isAdded()) {
+                    replaceFragment(hotUserFragment);
+                }
                 break;
             // 我的收藏
             case R.id.arsenal_my_repo:

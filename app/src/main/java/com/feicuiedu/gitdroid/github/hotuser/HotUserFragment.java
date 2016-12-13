@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.feicuiedu.gitdroid.R;
+import com.feicuiedu.gitdroid.commons.ActivityUtils;
 import com.feicuiedu.gitdroid.login.model.User;
 
 import java.util.List;
@@ -22,20 +24,25 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 /**
  * Created by gqq on 2016/12/13.
  */
-public class HotUserFragment extends Fragment implements HotUserPresenter.HotUserView{
-
-    private HotUserPresenter presenter;
-
-    @BindView(R.id.ptrClassicFrameLayout)
-    PtrClassicFrameLayout ptrClassicFrameLayout;
+public class HotUserFragment extends Fragment implements HotUserPresenter.HotUserView {
 
     @BindView(R.id.lvRepos)
-    ListView listView;
+    ListView lvUsers;
+    @BindView(R.id.ptrClassicFrameLayout)
+    PtrClassicFrameLayout ptrClassicFrameLayout;
+    @BindView(R.id.emptyView)
+    TextView emptyView;
+    @BindView(R.id.errorView)
+    TextView errorView;
+    private HotUserAdapter adapter;
+
+    private ActivityUtils activityUtils;
+    private HotUserPresenter presenter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_hot_user,container,false);
+        View view = inflater.inflate(R.layout.fragment_hot_user, container, false);
         return view;
     }
 
@@ -44,17 +51,34 @@ public class HotUserFragment extends Fragment implements HotUserPresenter.HotUse
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         presenter = new HotUserPresenter(this);
+        activityUtils = new ActivityUtils(this);
+        adapter = new HotUserAdapter();
+        lvUsers.setAdapter(adapter);
         // 初始PulltoRefresh控件
         initPullToRefresh();
+
+        //如果没有数据，就自动刷新
+        if (adapter.getCount() <= 0) {
+            // 只是为了给UI线程让下步，不要在这里等着刷新数据
+            ptrClassicFrameLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ptrClassicFrameLayout.autoRefresh();
+                }
+            }, 200);
+        }
     }
 
     private void initPullToRefresh() {
+        ptrClassicFrameLayout.setLastUpdateTimeRelateObject(this);
+        ptrClassicFrameLayout.setDurationToClose(2000);
         // 下拉刷新控件的监听(下拉时和上拉时会来回调的)
         ptrClassicFrameLayout.setPtrHandler(new PtrDefaultHandler2() {
             @Override
             public void onLoadMoreBegin(PtrFrameLayout frame) {
                 presenter.loadMore();
             }
+
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 presenter.refresh();
@@ -64,22 +88,25 @@ public class HotUserFragment extends Fragment implements HotUserPresenter.HotUse
 
     @Override
     public void refreshData(List<User> list) {
-
+        adapter.clear();
+        adapter.addAll(list);
     }
 
     @Override
     public void showRefreshView() {
-
+        ptrClassicFrameLayout.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
     }
 
     @Override
     public void stopRefresh() {
-
+        ptrClassicFrameLayout.refreshComplete();
     }
 
     @Override
     public void addLoadData(List<User> list) {
-
+        adapter.addAll(list);
     }
 
     @Override
@@ -89,11 +116,11 @@ public class HotUserFragment extends Fragment implements HotUserPresenter.HotUse
 
     @Override
     public void hideLoadView() {
-
+        ptrClassicFrameLayout.refreshComplete();
     }
 
     @Override
     public void showMessage(String msg) {
-
+        activityUtils.showToast(msg);
     }
 }
