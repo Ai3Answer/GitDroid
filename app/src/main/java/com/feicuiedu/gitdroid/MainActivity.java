@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.feicuiedu.gitdroid.commons.ActivityUtils;
+import com.feicuiedu.gitdroid.favorite.FavoriteFragment;
 import com.feicuiedu.gitdroid.gank.GankFragment;
 import com.feicuiedu.gitdroid.github.HotRepoFragment;
 import com.feicuiedu.gitdroid.github.hotuser.HotUserFragment;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HotRepoFragment mHotRepoFragment;
     private GankFragment mGankFragment;
     private HotUserFragment hotUserFragment;
+    private FavoriteFragment favoriteFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +158,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             // 我的收藏
             case R.id.arsenal_my_repo:
-
+                if (favoriteFragment == null) {
+                    favoriteFragment = new FavoriteFragment();
+                }
+                if (!favoriteFragment.isAdded()) {
+                    replaceFragment(favoriteFragment);
+                }
                 break;
             // 每日干货
             case R.id.tips_daily:
