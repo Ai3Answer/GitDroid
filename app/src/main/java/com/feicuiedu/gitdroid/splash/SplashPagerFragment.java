@@ -21,6 +21,7 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class SplashPagerFragment extends Fragment {
 
+    // AndroidViewAnimations 代码家的开源库
 
     @BindView(R.id.ivPhoneFont)
     ImageView ivPhoneFont;

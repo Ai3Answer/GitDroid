@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // 设置当前视图(更改了当前视图内容,将导致onContentChanged方法触发)
         setContentView(R.layout.activity_main);
 
-
     }
 
     @Override
@@ -139,13 +138,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             item.setChecked(false);
         }
 
-        // TODO: 2016/12/1 我的收藏页面切换视图
-
         switch (item.getItemId()){
 
             // 最热门
             case R.id.github_hot_repo:
-                if (mHotRepoFragment.isAdded()){
+                if (!mHotRepoFragment.isAdded()){
                     replaceFragment(mHotRepoFragment);
                 }
                 break;

@@ -2,12 +2,14 @@ package com.feicuiedu.gitdroid.login.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by gqq on 2016/12/8.
  */
 
 // 用户信息的实体类
-public class User {
+public class User implements Serializable{
 
     /**
      * login : octocat

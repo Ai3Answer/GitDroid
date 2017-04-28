@@ -6,12 +6,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feicuiedu.gitdroid.R;
 import com.feicuiedu.gitdroid.commons.ActivityUtils;
+import com.feicuiedu.gitdroid.favorite.dao.DBHelp;
+import com.feicuiedu.gitdroid.favorite.dao.LocalRepoDao;
+import com.feicuiedu.gitdroid.favorite.model.LocalRepo;
+import com.feicuiedu.gitdroid.favorite.model.RepoConverter;
+import com.feicuiedu.gitdroid.github.repoinfo.RepoInfoActivity;
 import com.feicuiedu.gitdroid.github.repolist.model.Language;
 import com.feicuiedu.gitdroid.github.repolist.model.Repo;
 
@@ -88,6 +94,33 @@ public class RepoListFragment extends Fragment implements RepoListView{
 
         mAdapter = new RepoListAdapter();
         mLvRepos.setAdapter(mAdapter);
+
+        mLvRepos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Repo repo = mAdapter.getItem(position);
+                RepoInfoActivity.open(getContext(), repo);
+            }
+        });
+
+        mLvRepos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                /**
+                 * 1.获取到我们长按的ListView的数据
+                 * 2.将数据添加到本地仓库数据库表中
+                 * 3.Dao里面需要传入的是LocalRepo
+                 * 4.Repo  LocalRepo   要做的：将Repo转换为LocalRepo
+                 */
+                Repo repo = mAdapter.getItem(position);
+                LocalRepo localRepo = RepoConverter.convert(repo);
+                new LocalRepoDao(DBHelp.getInstance(getContext())).createOrUpdate(localRepo);
+                mActivityUtils.showToast("收藏成功");
+                // 返回true，处理了事件，不会触发点击事件
+                return true;
+            }
+        });
 
         //判断有没有数据，没有数据的话，自动刷新
         if (mAdapter.getCount()==0){

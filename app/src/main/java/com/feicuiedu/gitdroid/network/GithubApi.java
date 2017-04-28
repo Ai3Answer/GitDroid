@@ -1,6 +1,7 @@
 package com.feicuiedu.gitdroid.network;
 
 import com.feicuiedu.gitdroid.github.hotuser.HotUserResult;
+import com.feicuiedu.gitdroid.github.repoinfo.RepoContentResult;
 import com.feicuiedu.gitdroid.github.repolist.model.Repo;
 import com.feicuiedu.gitdroid.github.repolist.model.RepoResult;
 import com.feicuiedu.gitdroid.login.model.AccessToken;
@@ -8,8 +9,10 @@ import com.feicuiedu.gitdroid.login.model.User;
 
 import java.util.List;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -68,7 +71,33 @@ public interface GithubApi {
             @Query("q")String q,
             @Query("page")int page);
 
+    /**
+     * 热门用户
+     * @param query
+     * @param pageId
+     * @return
+     */
     // https://api.github.com/search/users?q=followers:>1000
     @GET("/search/users")
     Call<HotUserResult> serachUser(@Query("q")String query, @Query("page")int pageId);
+
+    /**
+     * 获取readme
+     * @param owner 仓库拥有者
+     * @param repo 仓库名称
+     * @return
+     */
+    @GET("/repos/{owner}/{repo}/readme")
+    Call<RepoContentResult> getReadme(@Path("owner") String owner,
+                                      @Path("repo") String repo);
+
+    /**
+     * 获取MarkDown文件内容，内容以HTML形式展示出来
+     * @param body
+     * @return
+     */
+    @Headers({"Content-Type:text/plain"})
+    @POST("/markdown/raw")
+    Call<ResponseBody> markDown(@Body RequestBody body);
+
 }

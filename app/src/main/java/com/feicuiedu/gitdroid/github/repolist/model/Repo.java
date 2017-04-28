@@ -3,11 +3,13 @@ package com.feicuiedu.gitdroid.github.repolist.model;
 import com.feicuiedu.gitdroid.login.model.User;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by gqq on 2016/12/9.
  */
 
-public class Repo {
+public class Repo implements Serializable{
 
     /**
      * id : 29028775
